@@ -1,46 +1,99 @@
-const nuevaTarea = document.querySelector('.nuevaTarea')
-const cardsActividades=document.getElementById('cardsActividades');
-let actividades=[];
+const nuevaTarea = document.querySelector('nuevaTarea')
+const cardsTareas=document.getElementById('cardsTareas');
+const nombreTarea = document.querySelector('input');
+const tachado=document.getElementById('actividad');
+const contadorCompletas=document.getElementById('contadorCompletas');
+const contadorPendientes=document.getElementById('contadorPendientes');
+
+let tareas=[];
 
 const tarea = {
     nombre: '',
     estado: '',
+    id: ''
 
 };
 
-const editarTarea = () => {
+const editarTareaaux = () => {
     let tareaEditada = prompt('Ingresa la tarea modificada.')
     nuevaTarea.TextContent = tareaEditada
 }
 
 
-const construirTarea = () => {
+const editarTarea = (id) =>
+{
+    let tareaEditada = prompt('Ingresa nuevo nombre tarea.')
+    const tareaAux = tareas.find((tarea)=>tarea.id==id);
+    tareaAux.nombre=tareaEditada;
+    const tareasJson = JSON.stringify(tareas);
+    localStorage.setItem('tareas', tareasJson);
+    contadorTareas(-1);
+    renderizarActividades();
+}
 
-   const tarea =`<div class="border border d-flex  justify-content-between bg-white">
-            <div class="">`;
+const contadorTareas = (id) =>
+{
+    let pendientes = 0;
+    let completas = 0;
+    tareas.forEach((tarea) => {
+        
+        if(id == tarea.id)
+        {
+            if(tarea.estado == "pendiente")
+            {
+                tarea.estado = "completa";
+                
+                
+            }
+            else
+            {
+                tarea.estado = "pendiente";
+            }
+            const tareasJson = JSON.stringify(tareas);
+            localStorage.setItem('tareas', tareasJson);
+
+        }
+        if(tarea.estado == "pendiente")
+        {
+            pendientes++;
+
+        }
+        else
+        {
+            completas++;
+        }
+    })
+
+    contadorCompletas.innerText = completas;
+    contadorPendientes.innerText = pendientes;
+    renderizarActividades();
+}
+
+const construirTarea = (tarea) => {
+
+   let tarea2 =`<div ondblclick="contadorTareas(${tarea.id})" class="border border d-flex  justify-content-between bg-white">
+            <div id="actividad" class="">`;
     if(tarea.estado == "pendiente")
     {
-        tarea+= `<i id = "pendiente" class="fa-solid fa-list-check"></i>`;
+        tarea2+= `<i id = "pendiente" class="fa-solid fa-list-check"></i> <span class="">${tarea.nombre}</span>`;
     }
     else
     {
-
-        tarea+= `<i id = "completa" class="bi bi-check-lg"></i>`;
+        tarea2+= `<i id = "completa" class="bi bi-check-lg"></i> <span class="text-decoration-line-through">${tarea.nombre}</span>`;
     }
 
-    tarea+= `${tarea.nombre}
-            </div> 
+    tarea2+= `</div> 
             <div>
-                <button class="editar btn btn-outline-primary" onclick="editarActividad(${tarea.id})">
+                <button class="editar btn btn-outline-primary" onclick="editarTarea(${tarea.id})">
                     <i class="bi bi-pencil-square"></i>
                 </button>
-                <button class="eliminar btn btn-outline-danger" onclick="eliminarActividad(${tarea.id})">
+                <button class="eliminar btn btn-outline-danger" onclick="eliminarTarea(${tarea.id})">
                     <i class="bi bi-trash-fill"></i>
                 </button>
             </div>
     </div>`;
 
-    return tarea;
+    return tarea2;
         
 }
 
@@ -64,32 +117,33 @@ const construirTarea = () => {
 const renderizarActividades = () =>
 {
 
-    const cardsEnDiv = cardsActividades.children;
+    const cardsEnDiv = cardsTareas.children;
     if (cardsEnDiv.length > 0)
     {
         const cards = Array.from(cardsEnDiv);
         cards.forEach((card) =>
         {
-            cardsActividades.removeChild(card);
+            cardsTareas.removeChild(card);
         });
     }
 
-    actividades.forEach((actividad) =>
+    tareas.forEach((tarea) =>
     {
-        const card = construirTarea(actividad);
-        cardsActividades.insertAdjacentHTML('afterbegin', card);
+        const card = construirTarea(tarea);
+        cardsTareas.insertAdjacentHTML('afterbegin', card);
     });
 }
 
-const eliminarActividad = (id) =>
+const eliminarTarea = (id) =>
 {
-    const eliminar = confirm('¿Deseas eliminar este actividad?')
+    const eliminar = confirm('¿Deseas eliminar esta actividad?')
     if (eliminar == true) {
-        actividades = actividades.filter((actividad) => {
-            return actividad.id != id;
+        tareas = tareas.filter((tarea) => {
+            return tarea.id != id;
         });
-        const actividadesJson = JSON.stringify(actividades);
-        localStorage.setItem('actividades', actividadesJson);
+        const tareasJson = JSON.stringify(tareas);
+        localStorage.setItem('tareas', tareasJson);
+        contadorTareas(-1);
         renderizarActividades();
     }
 
@@ -98,18 +152,30 @@ const eliminarActividad = (id) =>
 const guardarTarea = (e) => {
     e.preventDefault();
     const tiempoActual = new Date();
-    const inputsNode = e.target.querySelectorAll('input');
-    const inputs = Array.from(inputsNode);
-    let tarea = {}
-    inputs.forEach((input) => {
-        actividad[input.name] = input.value;
-    });
-    actividad.id = `${tiempoActual.getTime()}-${tiempoActual.getMilliseconds()}`;
-    actividades.push(actividad);
-    const actividadesJson = JSON.stringify(actividades);
-    localStorage.setItem('actividades', actividadesJson);
+    const nombre = nombreTarea.value;
+    nombreTarea.value='';
+    let tarea = {};
+    console.log("entre");
+    tarea.nombre = nombre;
+    tarea.estado = "completa";
+    tarea.id = `${tiempoActual.getTime()}${tiempoActual.getMilliseconds()}`;
+    tareas.push(tarea);
+    const tareasJson = JSON.stringify(tareas);
+    localStorage.setItem('tareas', tareasJson);
+    contadorTareas(tarea.id);
+    renderizarActividades();
 
-    setTimeout(() => {
-        renderizarActividades();
-    }, 2000);
+    // setTimeout(() => {
+    // }, 2000);
 }
+
+const init = () => {
+    const tareasLocales = localStorage.getItem('tareas');
+    if (tareasLocales) {
+        tareas = JSON.parse(tareasLocales);
+        contadorTareas(-1);
+        renderizarActividades();
+    }
+}
+
+init();
