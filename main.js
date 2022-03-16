@@ -19,7 +19,6 @@ const editarTareaaux = () => {
     nuevaTarea.TextContent = tareaEditada
 }
 
-
 const editarTarea = (id) =>
 {
     let tareaEditada = prompt('Ingresa nuevo nombre tarea.')
@@ -42,8 +41,6 @@ const contadorTareas = (id) =>
             if(tarea.estado == "pendiente")
             {
                 tarea.estado = "completa";
-                
-                
             }
             else
             {
@@ -71,15 +68,15 @@ const contadorTareas = (id) =>
 
 const construirTarea = (tarea) => {
 
-   let tarea2 =`<div ondblclick="contadorTareas(${tarea.id})" class="border border d-flex  justify-content-between bg-white">
-            <div id="actividad" class="">`;
+   let tarea2 =`<div ondblclick="contadorTareas(${tarea.id})" class="border d-flex justify-content-between p-2">
+            <div id="actividad" class="d-flex align-items-center">`;
     if(tarea.estado == "pendiente")
     {
-        tarea2+= `<i id = "pendiente" class="fa-solid fa-list-check"></i> <span class="">${tarea.nombre}</span>`;
+        tarea2+= `<i id = "pendiente" class="fa-solid fa-list-check me-2"></i> <span class="">${tarea.nombre}</span>`;
     }
     else
     {
-        tarea2+= `<i id = "completa" class="bi bi-check-lg"></i> <span class="text-decoration-line-through">${tarea.nombre}</span>`;
+        tarea2+= `<i id = "completa" class="bi bi-check-lg me-2"></i> <span class="text-decoration-line-through">${tarea.nombre}</span>`;
     }
 
     tarea2+= `</div> 
@@ -93,30 +90,11 @@ const construirTarea = (tarea) => {
             </div>
     </div>`;
 
-    return tarea2;
-        
+    return tarea2;       
 }
-
-//<i class="bi bi-pencil-square"></i>
-//<i class="bi bi-trash-fill"></i>
-
-// const itemActividad = (actividad) => {
-//     const card = `<div class="card col-sm-4">
-//         <div class="card-body">
-//             <h5 class="card-title">${actividad.alias}</h5>
-//             <p class="card-text">Nombre Real: ${actividad.nombre}</p>
-//             <div class = "d-flex justify-content-end gap-3">
-//                 <button onclick="edicionHeroe(${actividad.id})" class="btn btn-primary"><i class="fa-solid fa-paintbrush"></i></button>
-//                 <button onclick="eliminarHeroe(${actividad.id})" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
-//             </div>
-//         </div>
-//     </div>`;
-//     return card;
-// }
 
 const renderizarActividades = () =>
 {
-
     const cardsEnDiv = cardsTareas.children;
     if (cardsEnDiv.length > 0)
     {
@@ -164,9 +142,6 @@ const guardarTarea = (e) => {
     localStorage.setItem('tareas', tareasJson);
     contadorTareas(tarea.id);
     renderizarActividades();
-
-    // setTimeout(() => {
-    // }, 2000);
 }
 
 const init = () => {
