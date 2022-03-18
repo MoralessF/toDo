@@ -22,12 +22,15 @@ const editarTareaaux = () => {
 const editarTarea = (id) =>
 {
     let tareaEditada = prompt('Ingresa nuevo nombre tarea.')
-    const tareaAux = tareas.find((tarea)=>tarea.id==id);
-    tareaAux.nombre=tareaEditada;
-    const tareasJson = JSON.stringify(tareas);
-    localStorage.setItem('tareas', tareasJson);
-    contadorTareas(-1);
-    renderizarActividades();
+    if(tareaEditada!==''&&tareaEditada!==null)
+    {
+        const tareaAux = tareas.find((tarea)=>tarea.id==id);
+        tareaAux.nombre=tareaEditada;
+        const tareasJson = JSON.stringify(tareas);
+        localStorage.setItem('tareas', tareasJson);
+        contadorTareas(-1);
+        renderizarActividades();
+    }
 }
 
 const contadorTareas = (id) =>
@@ -50,15 +53,8 @@ const contadorTareas = (id) =>
             localStorage.setItem('tareas', tareasJson);
 
         }
-        if(tarea.estado == "pendiente")
-        {
-            pendientes++;
-
-        }
-        else
-        {
-            completas++;
-        }
+        if(tarea.estado == "pendiente"){pendientes++;}
+        else{completas++;}
     })
 
     contadorCompletas.innerText = completas;
@@ -68,18 +64,20 @@ const contadorTareas = (id) =>
 
 const construirTarea = (tarea) => {
 
-   let tarea2 =`<div ondblclick="contadorTareas(${tarea.id})" class="border d-flex justify-content-between p-2">
-            <div id="actividad" class="d-flex align-items-center">`;
+   let tarea2 =`<div ondblclick="contadorTareas(${tarea.id})" class="border d-flex justify-content-between p-2 mt-1 mb-1">
+            <div class="d-flex">
+                <h6 id="actividad" class="d-flex align-items-center">`;
     if(tarea.estado == "pendiente")
     {
-        tarea2+= `<i id = "pendiente" class="fa-solid fa-list-check me-2"></i> <span class="">${tarea.nombre}</span>`;
+        tarea2+= `<i id = "pendiente" class="fa-solid fa-list-check me-2 text-primary"></i> <span class="">${tarea.nombre}</span>`;
     }
     else
     {
-        tarea2+= `<i id = "completa" class="bi bi-check-lg me-2"></i> <span class="text-decoration-line-through">${tarea.nombre}</span>`;
+        tarea2+= `<i id = "completa" class="bi bi-check-lg me-2 text-success"></i> <span class="text-decoration-line-through">${tarea.nombre}</span>`;
     }
 
-    tarea2+= `</div> 
+    tarea2+= `</h6>
+            </div> 
             <div>
                 <button class="editar btn btn-outline-primary" onclick="editarTarea(${tarea.id})">
                     <i class="bi bi-pencil-square"></i>
@@ -131,17 +129,20 @@ const guardarTarea = (e) => {
     e.preventDefault();
     const tiempoActual = new Date();
     const nombre = nombreTarea.value;
-    nombreTarea.value='';
-    let tarea = {};
-    console.log("entre");
-    tarea.nombre = nombre;
-    tarea.estado = "completa";
-    tarea.id = `${tiempoActual.getTime()}${tiempoActual.getMilliseconds()}`;
-    tareas.push(tarea);
-    const tareasJson = JSON.stringify(tareas);
-    localStorage.setItem('tareas', tareasJson);
-    contadorTareas(tarea.id);
-    renderizarActividades();
+    if(nombreTarea.value!=="")
+    {
+        nombreTarea.value='';
+        let tarea = {};
+        console.log("entre");
+        tarea.nombre = nombre;
+        tarea.estado = "completa";
+        tarea.id = `${tiempoActual.getTime()}${tiempoActual.getMilliseconds()}`;
+        tareas.push(tarea);
+        const tareasJson = JSON.stringify(tareas);
+        localStorage.setItem('tareas', tareasJson);
+        contadorTareas(tarea.id);
+        renderizarActividades();
+    }
 }
 
 const init = () => {
