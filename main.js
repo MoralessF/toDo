@@ -129,7 +129,7 @@ const guardarTarea = (e) => {
     e.preventDefault();
     const tiempoActual = new Date();
     const nombre = nombreTarea.value;
-    if(nombreTarea.value!=="")
+    if(nombreTarea.value!==''&&nombreTarea.value!==null)
     {
         nombreTarea.value='';
         let tarea = {};
