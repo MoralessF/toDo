@@ -19,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/MoralessF/toDo/issues"
   },
-  "homepage": "https://github.com/MoralessF/toDo#readme"
+  "homepage": "https://github.com/MoralessF/toDo#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.3"
+  }
 }
