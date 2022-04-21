@@ -14,10 +14,10 @@ const tarea = {
 
 };
 
-const editarTareaaux = () => {
-    let tareaEditada = prompt('Ingresa la tarea modificada.')
-    nuevaTarea.TextContent = tareaEditada
-}
+// const editarTareaaux = () => {
+//     let tareaEditada = prompt('Ingresa la tarea modificada.')
+//     nuevaTarea.TextContent = tareaEditada
+// }
 
 const editarTarea = (id) =>
 {
@@ -133,7 +133,6 @@ const guardarTarea = (e) => {
     {
         nombreTarea.value='';
         let tarea = {};
-        console.log("entre");
         tarea.nombre = nombre;
         tarea.estado = "completa";
         tarea.id = `${tiempoActual.getTime()}${tiempoActual.getMilliseconds()}`;
